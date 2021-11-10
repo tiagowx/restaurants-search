@@ -6,10 +6,11 @@ import logo from '../../assets/logo.svg'
 import restaurante from '../../assets/restaurante-fake.png';
 
 import { Carousel, CarouselTitle, Container, Logo, Map, Search, Wrapper } from "./styles";
-import { Card, RestaurantCard } from '../../components';
+import { Card, RestaurantCard, Modal } from '../../components';
 
 const Home = () => {
   const [inputValue, setInputValue] = useState('');
+  const [modalOpened, setModalOpened] = useState(false);
 
   const settings = {
     dots: false,
@@ -45,10 +46,12 @@ const Home = () => {
             <Card photo={restaurante} title="Nome Restaurant" />
             <Card photo={restaurante} title="Nome Restaurant" />
           </Carousel>
+          <button onClick={() => setModalOpened(true)}>Abrir modal</button>
         </Search>
         <RestaurantCard />
       </Container>
       <Map />
+      <Modal open={modalOpened} onClose={() => setModalOpened(!modalOpened)} />
     </Wrapper>
   );
 }
