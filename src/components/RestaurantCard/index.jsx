@@ -5,20 +5,21 @@ import { Addres, Restaurant, RestaurantInfo, RestaurantPhoto, Title } from './st
 
 import restaurante from '../../assets/restaurante-fake.png';
 
-const RestaurantCard = () => (
-  <Restaurant>
+const RestaurantCard = ({ restaurant, onClick }) => (
+  
+  <Restaurant onClick={onClick}>
     <RestaurantInfo>
-      <Title>Nome do Restaurante</Title>
+      <Title>{restaurant.name}</Title>
       <ReactStars
         activeColor="#e7711c"
         count={4}
         edit={false}
         isHalf
-        value={4}
+        value={restaurant.rating}
       />
-      <Addres>Rua da França, 23</Addres>
+      <Addres>{restaurant.vicinity || restaurant.formatted_address}</Addres>
     </RestaurantInfo>
-    <RestaurantPhoto src={restaurante} />
+    <RestaurantPhoto src={restaurant.photos ? restaurant.photos[0].gitUrl() : restaurante} />
   </Restaurant>
 );
 
