@@ -1,9 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GoogleApiWrapper, Map, Marker } from "google-maps-react";
 
 export const MapContainer = (props) => {
   const [map, setMap] = useState(null);
-  const { google } = props;
+  const { google, query } = props;
+
+  useEffect(() => {
+    if (query) {
+      searchByQuery(query);
+    }
+  }, [query])
+
+  function searchByQuery(query, center) {
+    const service = new google.maps.places.PlacesService(map);
+
+    const request = {
+      location: center,
+      radius: '200',
+      type: ['restaurant'],
+      query,
+    };
+
+    service.textSearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        console.log('restaurants>>>', results);
+      }
+    });
+
+  }
 
   function searchNearby(map, center) {
     const service = new google.maps.places.PlacesService(map);
@@ -15,8 +39,8 @@ export const MapContainer = (props) => {
     };
 
     service.nearbySearch(request, (results, status) => {
-      if (status == google.maps.places.PlacesService.OK) {
-        console.log('restaurants>>>', results)
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        console.log('restaurants>>>', results);
       }
     });
 
@@ -27,11 +51,13 @@ export const MapContainer = (props) => {
     searchNearby(map, map.center);
   }
 
-  return <Map google={google} centerAroundCurrentLocation onReady={onMapReady} onRecenter={onMapReady} />
+  return (
+    <Map google={google} centerAroundCurrentLocation onReady={onMapReady} onRecenter={onMapReady} />
+  );
 
 };
 
 export default GoogleApiWrapper({
-  apiKey: process.env.REACT_APP_GOOGLE_API_KEYs,
+  apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
   language: 'pt-BR'
 })(MapContainer);
