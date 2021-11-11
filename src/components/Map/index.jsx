@@ -7,25 +7,27 @@ import { setRestaurants, setRestaurant } from '../../redux/modules/restaurants';
 export const MapContainer = (props) => {
   const dispatch = useDispatch();
   const { restaurants } = useSelector((state) => state.restaurants);
-
+  
   const [map, setMap] = useState(null);
   const { google, query, placeId } = props;
-
+  
   useEffect(() => {
     if (query) {
       searchByQuery(query);
     }
   }, [query])
-
+  
   useEffect(() => {
     if (placeId) {
       getRestaurantInfo(placeId);
     }
   });
-
+  
   function getRestaurantInfo(placeId) {
     const service = new google.maps.places.PlacesService(map);
-
+    
+    dispatch(setRestaurant(null));
+    
     const request = {
       placeId,
       fields: [
@@ -35,38 +37,40 @@ export const MapContainer = (props) => {
         'formatted_phone_number',
       ],
     };
-
+    
     service.textSearch(request, (place, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         console.log('restaurants>>>', place);
         dispatch(setRestaurant(place));
       }
     });
-
+    
   }
-
+  
   function searchByQuery(query, center) {
     const service = new google.maps.places.PlacesService(map);
-
+    dispatch(setRestaurants([]));
+    
     const request = {
       location: center,
       radius: '200',
       type: ['restaurant'],
       query,
     };
-
+    
     service.textSearch(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         console.log('restaurants>>>', results);
         dispatch(setRestaurants(results));
       }
     });
-
+    
   }
-
+  
   function searchNearby(map, center) {
     const service = new google.maps.places.PlacesService(map);
-
+    dispatch(setRestaurants([]));
+    
     const request = {
       location: center,
       radius: '20000',

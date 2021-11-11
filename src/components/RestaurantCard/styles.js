@@ -40,7 +40,8 @@ export const Addres = styled.span`
 
 
 export const RestaurantPhoto = styled.img` 
-  width:  100px;
+  display: ${(props) => (props.imageLoaded ? 'block' : 'none')};
+  width: 100px;
   height: 100px;
   object-fit: cover;
   border-radius: 6px;
